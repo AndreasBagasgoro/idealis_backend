@@ -1,4 +1,4 @@
-const IngredientRepository = require('../repositories/ingredientRepositories');
+const IngredientRepository = require('../repositories/favoriteRecipeRepositories');
 
 const getAllIngredient = async () => {
     const ingredient = await IngredientRepository.findAllIngredient();

@@ -32,11 +32,14 @@ router.get('/', (req, res) => {
     message: 'Welcome to the Idealis API!',
     version: '1.0.0',
     endpoints: {
+      auth: '/api/auth',
       users: '/api/users',
       userProfiles: '/api/profiles',
       ingredients: '/api/ingredients',
       recipes: '/api/recipes',
       recipeIngredients: '/api/recipeIngredients',
+      favoriteRecipes: '/api/favorite-recipes',
+      recipeCooks: '/api/recipe-cooks',
       test: '/api/test',
       health: '/api/health'
     },
@@ -115,7 +118,7 @@ router.get('/test', (req, res) => {
  */
 router.get('/health', (req, res) => {
   const db = req.app.locals.db;
-  
+
   if (!db) {
     return res.status(500).json({
       success: false,
@@ -132,7 +135,7 @@ router.get('/health', (req, res) => {
         error: err.message
       });
     }
-    
+
     res.json({
       success: true,
       status: 'API healthy',
@@ -144,12 +147,12 @@ router.get('/health', (req, res) => {
 
 // Users API
 try {
-  const userRoutes = require('./users');
+  const userRoutes = require('./usersRoutes');
   router.use('/users', userRoutes);
   console.log('✅ Users routes mounted at /api/users');
 } catch (error) {
   console.warn('⚠️ Users route not found');
-  
+
   // Fallback users route
   router.get('/users', (req, res) => {
     res.status(503).json({
@@ -180,7 +183,7 @@ try {
 
 // Ingredients API
 try {
-  const ingredientRoutes = require('./ingredient');
+  const ingredientRoutes = require('./ingredientsrRoutes');
   router.use('/ingredients', ingredientRoutes);
   console.log('✅ Ingredients routes mounted at /api/ingredient');
 } catch (error) {
@@ -198,7 +201,7 @@ try {
 
 // Recipe API
 try {
-  const recipeRoutes = require('./recipes');
+  const recipeRoutes = require('./recipesRoutes');
   router.use('/recipes', recipeRoutes);
   console.log('✅ Recipe routes mounted at /api/recipes');
 } catch (error) {
@@ -216,7 +219,7 @@ try {
 
 //Recipe Ingredient API
 try {
-  const recipeIngredientRoutes = require('./recipeIngredient');
+  const recipeIngredientRoutes = require('./recipeIngredientRoutes');
   router.use('/recipeIngredients', recipeIngredientRoutes);
   console.log('✅ Recipe Ingredient routes mounted at /api/recipeIngredients');
 } catch (error) {
@@ -229,6 +232,57 @@ try {
       reason: 'Route file not found'
     })
   })
+}
+
+// Auth API
+try {
+  const authRoutes = require('./authRoutes');
+  router.use('/auth', authRoutes);
+  console.log('✅ Auth routes mounted at /api/auth');
+} catch (error) {
+  console.warn('⚠️ Auth route not found');
+
+  router.get('/auth', (req, res) => {
+    res.status(503).json({
+      success: false,
+      message: 'Auth endpoint not available',
+      reason: 'Route file not found'
+    });
+  });
+}
+
+// Favorite Recipes API
+try {
+  const favoriteRecipeRoutes = require('./favoriteRecipesRoutes');
+  router.use('/favorite-recipes', favoriteRecipeRoutes);
+  console.log('✅ Favorite Recipes routes mounted at /api/favorite-recipes');
+} catch (error) {
+  console.warn('⚠️ Favorite Recipes route not found');
+
+  router.get('/favorite-recipes', (req, res) => {
+    res.status(503).json({
+      success: false,
+      message: 'Favorite Recipes endpoint not available',
+      reason: 'Route file not found'
+    });
+  });
+}
+
+// Recipe Cooks API
+try {
+  const recipeCookRoutes = require('./recipeCooksRoutes');
+  router.use('/recipe-cooks', recipeCookRoutes);
+  console.log('✅ Recipe Cooks routes mounted at /api/recipe-cooks');
+} catch (error) {
+  console.warn('⚠️ Recipe Cooks route not found');
+
+  router.get('/recipe-cooks', (req, res) => {
+    res.status(503).json({
+      success: false,
+      message: 'Recipe Cooks endpoint not available',
+      reason: 'Route file not found'
+    });
+  });
 }
 
 // API Documentation
@@ -246,7 +300,7 @@ router.get('/docs', (req, res) => {
       },
       {
         path: '/health',
-        method: 'GET', 
+        method: 'GET',
         description: 'API health check with database status'
       },
       {
@@ -278,13 +332,16 @@ router.use((req, res) => {
     method: req.method,
     available_endpoints: [
       '/api',
-      '/api/health', 
+      '/api/auth',
+      '/api/health',
       '/api/test',
       '/api/users',
       '/api/profiles',
       '/api/ingredients',
       '/api/recipes',
       '/api/recipeIngredients',
+      '/api/favorite-recipes',
+      '/api/recipe-cooks',
       '/api/docs'
     ],
     timestamp: new Date().toISOString()

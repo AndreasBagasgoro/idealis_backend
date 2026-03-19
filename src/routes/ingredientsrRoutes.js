@@ -42,8 +42,9 @@ router.get('/', ingredientController.getAllIngredient);
  *         name: id
  *         required: true
  *         schema:
- *           type: integer
- *         description: Ingredient ID
+ *           type: string
+ *           format: uuid
+ *         description: Ingredient ID (UUID)
  *     responses:
  *       200:
  *         description: Ingredient data
@@ -78,13 +79,33 @@ router.get('/:id', ingredientController.getIngredientById);
  *           schema:
  *             type: object
  *             required:
+ *               - user_id
  *               - name
+ *               - category
+ *               - quantity
  *               - unit
  *             properties:
+ *               user_id:
+ *                 type: string
+ *                 format: uuid
  *               name:
  *                 type: string
+ *                 maxLength: 150
+ *               icon:
+ *                 type: string
+ *                 maxLength: 255
+ *               category:
+ *                 type: string
+ *                 enum: [protein, carbohydrate, vegetable, fruit, dairy]
+ *               quantity:
+ *                 type: number
+ *                 format: float
  *               unit:
  *                 type: string
+ *                 maxLength: 50
+ *               expired_at:
+ *                 type: string
+ *                 format: date
  *     responses:
  *       201:
  *         description: Ingredient created successfully
@@ -117,8 +138,9 @@ router.post('/', ingredientController.createIngredient);
  *         name: id
  *         required: true
  *         schema:
- *           type: integer
- *         description: Ingredient ID
+ *           type: string
+ *           format: uuid
+ *         description: Ingredient ID (UUID)
  *     requestBody:
  *       required: true
  *       content:
@@ -128,8 +150,22 @@ router.post('/', ingredientController.createIngredient);
  *             properties:
  *               name:
  *                 type: string
+ *                 maxLength: 150
+ *               icon:
+ *                 type: string
+ *                 maxLength: 255
+ *               category:
+ *                 type: string
+ *                 enum: [protein, carbohydrate, vegetable, fruit, dairy]
+ *               quantity:
+ *                 type: number
+ *                 format: float
  *               unit:
  *                 type: string
+ *                 maxLength: 50
+ *               expired_at:
+ *                 type: string
+ *                 format: date
  *     responses:
  *       200:
  *         description: Ingredient updated successfully
@@ -162,8 +198,9 @@ router.put('/:id', ingredientController.updateIngredient);
  *         name: id
  *         required: true
  *         schema:
- *           type: integer
- *         description: Ingredient ID
+ *           type: string
+ *           format: uuid
+ *         description: Ingredient ID (UUID)
  *     responses:
  *       200:
  *         description: Ingredient deleted successfully

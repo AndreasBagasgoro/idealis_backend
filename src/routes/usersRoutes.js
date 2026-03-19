@@ -42,8 +42,9 @@ router.get('/', userController.getAllUsers);
  *         name: id
  *         required: true
  *         schema:
- *           type: integer
- *         description: User ID
+ *           type: string
+ *           format: uuid
+ *         description: User ID (UUID)
  *     responses:
  *       200:
  *         description: User data
@@ -76,18 +77,35 @@ router.get('/:id', userController.getUserById);
  *           schema:
  *             type: object
  *             required:
- *               - username
+ *               - first_name
+ *               - last_name
  *               - email
- *               - password
+ *               - password_hash
  *             properties:
- *               username:
+ *               first_name:
  *                 type: string
+ *                 maxLength: 100
+ *               last_name:
+ *                 type: string
+ *                 maxLength: 100
  *               email:
  *                 type: string
  *                 format: email
- *               password:
+ *               password_hash:
  *                 type: string
- *                 minLength: 6
+ *                 description: Bcrypt hashed password
+ *               birth_date:
+ *                 type: string
+ *                 format: date
+ *               gender:
+ *                 type: string
+ *                 enum: [male, female, other]
+ *               height_cm:
+ *                 type: number
+ *                 format: float
+ *               weight_kg:
+ *                 type: number
+ *                 format: float
  *     responses:
  *       201:
  *         description: User created successfully
@@ -118,8 +136,9 @@ router.post('/', userController.createUser);
  *         name: id
  *         required: true
  *         schema:
- *           type: integer
- *         description: User ID
+ *           type: string
+ *           format: uuid
+ *         description: User ID (UUID)
  *     requestBody:
  *       required: true
  *       content:
@@ -127,14 +146,29 @@ router.post('/', userController.createUser);
  *           schema:
  *             type: object
  *             properties:
- *               username:
+ *               first_name:
  *                 type: string
+ *                 maxLength: 100
+ *               last_name:
+ *                 type: string
+ *                 maxLength: 100
  *               email:
  *                 type: string
  *                 format: email
- *               password:
+ *               password_hash:
  *                 type: string
- *                 minLength: 6
+ *               birth_date:
+ *                 type: string
+ *                 format: date
+ *               gender:
+ *                 type: string
+ *                 enum: [male, female, other]
+ *               height_cm:
+ *                 type: number
+ *                 format: float
+ *               weight_kg:
+ *                 type: number
+ *                 format: float
  *     responses:
  *       200:
  *         description: User updated successfully
@@ -167,8 +201,9 @@ router.put('/:id', userController.updateUser);
  *         name: id
  *         required: true
  *         schema:
- *           type: integer
- *         description: User ID
+ *           type: string
+ *           format: uuid
+ *         description: User ID (UUID)
  *     responses:
  *       200:
  *         description: User deleted successfully

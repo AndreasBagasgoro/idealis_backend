@@ -32,24 +32,66 @@ const options = {
           type: 'object',
           properties: {
             id: {
-              type: 'integer',
-              description: 'User ID',
+              type: 'string',
+              format: 'uuid',
+              description: 'User ID (UUID)',
+            },
+            first_name: {
+              type: 'string',
+              maxLength: 100,
+              description: 'First name',
+            },
+            last_name: {
+              type: 'string',
+              maxLength: 100,
+              description: 'Last name',
             },
             username: {
               type: 'string',
-              description: 'Username',
+              maxLength: 255,
+              description: 'Unique username, auto-generated from first_name + last_name',
             },
             email: {
               type: 'string',
               format: 'email',
-              description: 'User email',
+              maxLength: 255,
+              description: 'User email (unique)',
             },
-            createdAt: {
+            password_hash: {
+              type: 'string',
+              maxLength: 255,
+              description: 'Bcrypt hashed password',
+            },
+            birth_date: {
+              type: 'string',
+              format: 'date',
+              nullable: true,
+              description: 'Date of birth',
+            },
+            gender: {
+              type: 'string',
+              enum: ['male', 'female', 'other'],
+              nullable: true,
+              description: 'Gender',
+            },
+            height_cm: {
+              type: 'number',
+              format: 'float',
+              nullable: true,
+              description: 'Height in centimeters',
+            },
+            weight_kg: {
+              type: 'number',
+              format: 'float',
+              nullable: true,
+              description: 'Weight in kilograms',
+            },
+            created_at: {
               type: 'string',
               format: 'date-time',
               description: 'Creation timestamp',
             },
-            updatedAt: {
+            updated_at: {
               type: 'string',
               format: 'date-time',
               description: 'Last update timestamp',
@@ -60,23 +102,53 @@ const options = {
           type: 'object',
           properties: {
             id: {
-              type: 'integer',
-              description: 'Ingredient ID',
+              type: 'string',
+              format: 'uuid',
+              description: 'Ingredient ID (UUID)',
+            },
+            user_id: {
+              type: 'string',
+              format: 'uuid',
+              description: 'Owner User ID',
             },
             name: {
               type: 'string',
+              maxLength: 150,
               description: 'Ingredient name',
+            },
+            icon: {
+              type: 'string',
+              maxLength: 255,
+              nullable: true,
+              description: 'Icon URL or name',
+            },
+            category: {
+              type: 'string',
+              enum: ['protein', 'carbohydrate', 'vegetable', 'fruit', 'dairy'],
+              description: 'Ingredient category',
+            },
+            quantity: {
+              type: 'number',
+              format: 'float',
+              description: 'Quantity available',
             },
             unit: {
               type: 'string',
-              description: 'Unit of measurement',
+              maxLength: 50,
+              description: 'Unit of measurement (gram, liter, buah, etc.)',
             },
-            createdAt: {
+            expired_at: {
+              type: 'string',
+              format: 'date',
+              nullable: true,
+              description: 'Expiration date',
+            },
+            created_at: {
               type: 'string',
               format: 'date-time',
               description: 'Creation timestamp',
             },
-            updatedAt: {
+            updated_at: {
               type: 'string',
               format: 'date-time',
               description: 'Last update timestamp',
@@ -87,73 +159,64 @@ const options = {
           type: 'object',
           properties: {
             id: {
-              type: 'integer',
-              description: 'Recipe ID',
-            },
-            title: {
               type: 'string',
-              description: 'Recipe title',
+              format: 'uuid',
+              description: 'Recipe ID (UUID)',
+            },
+            user_id: {
+              type: 'string',
+              format: 'uuid',
+              description: 'User ID who saved the recipe',
+            },
+            name: {
+              type: 'string',
+              maxLength: 200,
+              description: 'Recipe name',
             },
             description: {
               type: 'string',
+              nullable: true,
               description: 'Recipe description',
             },
-            instructions: {
+            photo_url: {
               type: 'string',
-              description: 'Cooking instructions',
+              maxLength: 500,
+              nullable: true,
+              description: 'Recipe photo URL',
             },
-            userId: {
+            flavor_preferences: {
+              type: 'array',
+              items: { type: 'string' },
+              nullable: true,
+              description: 'Flavor preferences (e.g. sweet, spicy, savory, sour)',
+            },
+            diet_targets: {
+              type: 'array',
+              items: { type: 'string' },
+              nullable: true,
+              description: 'Diet targets (e.g. low_calorie, high_protein, gluten_free, vegetarian)',
+            },
+            servings: {
               type: 'integer',
-              description: 'User ID who created the recipe',
+              nullable: true,
+              description: 'Number of servings',
             },
-            createdAt: {
+            ingredients_used: {
+              type: 'array',
+              items: { type: 'object' },
+              nullable: true,
+              description: 'List of ingredients and quantities used',
+            },
+            steps: {
+              type: 'array',
+              items: { type: 'object' },
+              nullable: true,
+              description: 'Cooking steps generated by AI',
+            },
+            created_at: {
               type: 'string',
               format: 'date-time',
               description: 'Creation timestamp',
-            },
-            updatedAt: {
-              type: 'string',
-              format: 'date-time',
-              description: 'Last update timestamp',
-            },
-          },
-        },
-        UserProfile: {
-          type: 'object',
-          properties: {
-            id: {
-              type: 'integer',
-              description: 'Profile ID',
-            },
-            userId: {
-              type: 'integer',
-              description: 'Associated User ID',
-            },
-            firstName: {
-              type: 'string',
-              description: 'First name',
-            },
-            lastName: {
-              type: 'string',
-              description: 'Last name',
-            },
-            bio: {
-              type: 'string',
-              description: 'User biography',
-            },
-            avatar: {
-              type: 'string',
-              description: 'Avatar URL',
-            },
-            createdAt: {
-              type: 'string',
-              format: 'date-time',
-              description: 'Creation timestamp',
-            },
-            updatedAt: {
-              type: 'string',
-              format: 'date-time',
-              description: 'Last update timestamp',
             },
           },
         },
@@ -161,30 +224,88 @@ const options = {
           type: 'object',
           properties: {
             id: {
-              type: 'integer',
-              description: 'Recipe ingredient ID',
+              type: 'string',
+              format: 'uuid',
+              description: 'RecipeIngredient ID (UUID)',
             },
-            recipeId: {
-              type: 'integer',
+            recipe_id: {
+              type: 'string',
+              format: 'uuid',
               description: 'Recipe ID',
             },
-            ingredientId: {
-              type: 'integer',
-              description: 'Ingredient ID',
+            ingredient_id: {
+              type: 'string',
+              format: 'uuid',
+              nullable: true,
+              description: 'Ingredient ID (nullable if ingredient not in inventory)',
             },
-            quantity: {
+            ingredient_name: {
+              type: 'string',
+              nullable: true,
+              description: 'Fallback ingredient name if not in inventory',
+            },
+            quantity_needed: {
               type: 'number',
-              description: 'Quantity of ingredient',
+              format: 'float',
+              description: 'Quantity needed',
             },
-            createdAt: {
+            unit: {
+              type: 'string',
+              description: 'Unit of measurement',
+            },
+          },
+        },
+        RecipeCook: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'string',
+              format: 'uuid',
+              description: 'RecipeCook ID (UUID)',
+            },
+            user_id: {
+              type: 'string',
+              format: 'uuid',
+              description: 'User ID who cooked',
+            },
+            recipe_id: {
+              type: 'string',
+              format: 'uuid',
+              description: 'Recipe ID that was cooked',
+            },
+            servings_cooked: {
+              type: 'integer',
+              description: 'Number of servings cooked',
+            },
+            cooked_at: {
               type: 'string',
               format: 'date-time',
-              description: 'Creation timestamp',
+              description: 'Timestamp when the recipe was cooked',
             },
-            updatedAt: {
+          },
+        },
+        FavoriteRecipe: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'string',
+              format: 'uuid',
+              description: 'FavoriteRecipe ID (UUID)',
+            },
+            user_id: {
+              type: 'string',
+              format: 'uuid',
+              description: 'User ID',
+            },
+            recipe_id: {
+              type: 'string',
+              format: 'uuid',
+              description: 'Recipe ID',
+            },
+            created_at: {
               type: 'string',
               format: 'date-time',
-              description: 'Last update timestamp',
+              description: 'Timestamp when favorited',
             },
           },
         },
