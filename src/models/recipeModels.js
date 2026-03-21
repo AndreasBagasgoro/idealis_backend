@@ -57,12 +57,17 @@ module.exports = (sequelize, DataTypes) => {
     flavor_preferences: {
       type: DataTypes.JSON,
       allowNull: true,
-      comment: '["sweet","spicy","savory","sour"]',
+      comment: '["Manis","Pedas","Gurih","Asam"]',
     },
     diet_targets: {
       type: DataTypes.JSON,
       allowNull: true,
-      comment: '["low_calorie","high_protein","gluten_free","vegetarian"]',
+      comment: '["Rendah Kalori","Tinggi Protein","Bebas Gluten","Vegetarian"]',
+    },
+    duration: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      comment: 'Durasi memasak dalam menit',
     },
     servings: {
       type: DataTypes.INTEGER,

@@ -5,36 +5,53 @@ module.exports = {
     await queryInterface.createTable('Ingredients', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4
+      },
+      user_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'Users',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING(150),
+        allowNull: false
+      },
+      icon: {
+        type: Sequelize.STRING(255),
+        allowNull: true
       },
       category: {
-        type: Sequelize.STRING
+        type: Sequelize.ENUM('protein', 'carbohydrate', 'vegetable', 'fruit', 'dairy'),
+        allowNull: false
       },
       quantity: {
-        type: Sequelize.FLOAT
+        type: Sequelize.FLOAT,
+        allowNull: false
       },
       unit: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING(50),
+        allowNull: false
       },
-      expirationDate: {
+      expired_at: {
         type: Sequelize.DATEONLY,
-        allowNull: true,
+        allowNull: true
       },
-      image: {
-        type: Sequelize.STRING
-      },
-      createdAt: {
+      created_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       }
     });
   },

@@ -9,43 +9,62 @@ class UserRepository extends BaseRepository {
     async findAllWithProfile() {
         return await this.model.findAll({
             include: [{
-                    model: UserProfile,
-                    as: 'profile'
-                }],
-                attributes: { exclude: ['password']}
+                model: UserProfile,
+                as: 'profile'
+            }],
+            attributes: { exclude: ['password_hash'] }
         });
-    };
-
-    async findByIdWithProfile(id){
-        return await this.model.findByPk(id,{
-            include: [{
-                    model: UserProfile,
-                    as: 'profile'
-                }],
-                attributes: { exclude: ['password']}
-        });
-    };
-
-    async createUser(userData){
-        return await this.model.create(userData);
     }
 
-    async updateUser(id, userData){
-        const [updatedRowsCount] = await this.model.update(userData, {
-            where: { id}
+    async findByIdWithProfile(id) {
+        return await this.model.findByPk(id, {
+            include: [{
+                model: UserProfile,
+                as: 'profile'
+            }],
+            attributes: { exclude: ['password_hash'] }
         });
+    }
 
-        if (updatedRowsCount === 0){
+    async findByEmail(email) {
+        return await this.model.findOne({
+            where: { email },
+            include: [{
+                model: UserProfile,
+                as: 'profile'
+            }]
+        });
+    }
+
+    async findByUsername(username) {
+        return await this.model.findOne({
+            where: { username },
+            include: [{
+                model: UserProfile,
+                as: 'profile'
+            }]
+        });
+    }
+
+    async createUser(userData, transaction = null) {
+        const options = transaction ? { transaction } : {};
+        return await this.model.create(userData, options);
+    }
+
+    async updateUser(id, userData, transaction = null) {
+        const options = transaction ? { where: { id }, transaction } : { where: { id } };
+        const [updatedRowsCount] = await this.model.update(userData, options);
+
+        if (updatedRowsCount === 0) {
             return null;
         }
 
         return await this.findByIdWithProfile(id);
     }
 
-    async deleteUser(id){
-        const deleteRowsCount = await this.model.destroy({
-            where: { id }
-        });
+    async deleteUser(id, transaction = null) {
+        const options = transaction ? { where: { id }, transaction } : { where: { id } };
+        const deleteRowsCount = await this.model.destroy(options);
         return deleteRowsCount > 0;
     }
 }

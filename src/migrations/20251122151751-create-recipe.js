@@ -1,60 +1,70 @@
 'use strict';
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('Recipes', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4
+      },
+      user_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'Users',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE' // Bergantung kebutuhan, misalnya hapus resep jika user dihapus
       },
       name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING(200),
+        allowNull: false
       },
-      image: {
-        type: Sequelize.STRING
+      description: {
+        type: Sequelize.TEXT,
+        allowNull: true
+      },
+      photo_url: {
+        type: Sequelize.STRING(500),
+        allowNull: true
+      },
+      flavor_preferences: {
+        type: Sequelize.JSON,
+        allowNull: true
+      },
+      diet_targets: {
+        type: Sequelize.JSON,
+        allowNull: true
       },
       duration: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        comment: 'Durasi memasak dalam menit'
       },
       servings: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: true
       },
-      calories: {
-        type: Sequelize.FLOAT
-      },
-      protein: {
-        type: Sequelize.FLOAT
-      },
-      fat: {
-        type: Sequelize.FLOAT
-      },
-      carbs: {
-        type: Sequelize.FLOAT
-      },
-      tastePreference: {
-        type: Sequelize.STRING
-      },
-      dietTarget: {
-        type: Sequelize.STRING
+      ingredients_used: {
+        type: Sequelize.JSON,
+        allowNull: true
       },
       steps: {
-        type: Sequelize.JSON
+        type: Sequelize.JSON,
+        allowNull: true
       },
-      spices: {
-        type: Sequelize.JSON
-      },
-      createdAt: {
+      created_at: {
         allowNull: false,
-        type: Sequelize.DATE
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       }
     });
   },
+
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Recipes');
   }

@@ -34,12 +34,13 @@ class RecipeIngredientRepository extends BaseRepository {
         });
     }
 
-    async addIngredientToRecipe(recipeId, ingredientId, quantity, unit) {
+    async addIngredientToRecipe(recipeId, ingredientId, quantity_needed, unit, ingredient_name = null) {
         return await this.model.create({
             recipeId,
             ingredientId,
-            quantity,
-            unit
+            quantity_needed,
+            unit,
+            ingredient_name
         });
     }
 
@@ -50,9 +51,9 @@ class RecipeIngredientRepository extends BaseRepository {
         return deletedRowsCount > 0;
     }
 
-    async updateIngredientInRecipe(recipeId, ingredientId, quantity, unit) {
+    async updateIngredientInRecipe(recipeId, ingredientId, quantity_needed, unit, ingredient_name = null) {
         const [updatedRowsCount] = await this.model.update(
-            { quantity, unit },
+            { quantity_needed, unit, ingredient_name },
             { where: { recipeId, ingredientId } }
         );
         if (updatedRowsCount === 0) return null;

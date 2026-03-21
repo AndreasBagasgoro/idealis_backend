@@ -5,32 +5,53 @@ module.exports = {
     await queryInterface.createTable('UserProfiles', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4
       },
-      userId: {
-        type: Sequelize.INTEGER
+      user_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'Users',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
-      birthDate: {
-        type: Sequelize.DATEONLY
+      first_name: {
+        type: Sequelize.STRING(100),
+        allowNull: false
+      },
+      last_name: {
+        type: Sequelize.STRING(100),
+        allowNull: false
+      },
+      birth_date: {
+        type: Sequelize.DATEONLY,
+        allowNull: true
       },
       gender: {
-        type: Sequelize.STRING
+        type: Sequelize.ENUM('male', 'female', 'other'),
+        allowNull: true
       },
-      heightCm: {
-        type: Sequelize.FLOAT
+      height_cm: {
+        type: Sequelize.FLOAT,
+        allowNull: true
       },
-      weightKg: {
-        type: Sequelize.FLOAT
+      weight_kg: {
+        type: Sequelize.FLOAT,
+        allowNull: true
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       }
     });
   },

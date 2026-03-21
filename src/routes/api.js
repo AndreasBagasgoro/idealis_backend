@@ -165,7 +165,7 @@ try {
 
 // User Profiles API
 try {
-  const userProfileRoutes = require('./userProfiles');
+  const userProfileRoutes = require('./userProfileRoutes');
   router.use('/profiles', userProfileRoutes);
   console.log('✅ User Profile routes mounted at /api/profiles');
 } catch (error) {

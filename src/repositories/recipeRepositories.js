@@ -1,5 +1,5 @@
 const BaseRepository = require("./baseRepositories");
-const { Recipe, Ingredient, User } = require('../models'); // TAMBAHKAN User
+const { Recipe, Ingredient, User, UserProfile } = require('../models');
 
 class RecipeRepository extends BaseRepository {
     constructor(){
@@ -12,7 +12,8 @@ class RecipeRepository extends BaseRepository {
                 {
                     model: User, 
                     as: 'creator',
-                    attributes: ['id', 'firstName', 'lastName', 'email'] 
+                    attributes: ['id', 'username', 'email'],
+                    include: [{ model: UserProfile, as: 'profile' }]
                 },
                 {
                     model: Ingredient,
@@ -29,7 +30,8 @@ class RecipeRepository extends BaseRepository {
                 {
                     model: User,
                     as: 'creator',
-                    attributes: ['id', 'firstName', 'lastName', 'email']
+                    attributes: ['id', 'username', 'email'],
+                    include: [{ model: UserProfile, as: 'profile' }]
                 },
                 {
                     model: Ingredient,

@@ -1,53 +1,39 @@
 const BaseRepository = require('./baseRepositories');
-const { Ingredient, Recipe } = require('../models');
+const { FavoriteRecipe, User, Recipe } = require('../models');
 
-
-class IngredientRepository extends BaseRepository {
+class FavoriteRecipeRepository extends BaseRepository {
     constructor() {
-        super(Ingredient);
+        super(FavoriteRecipe);
     }
 
-    async findAllIngredient() {
+    async findAllFavorites() {
         return await this.model.findAll({
-            include: [{
-                model: Recipe,
-                as: 'recipes'
-            }],
-        });
-    };
-
-    async findIngredientById(id){
-        return await this.model.findByPk(id,{
-            include: [{
-                model: Recipe,
-                as: 'recipes'
-            }]
+            include: [
+                { model: User, as: 'user', attributes: ['id', 'username'] },
+                { model: Recipe, as: 'recipe', attributes: ['id', 'name', 'photo_url'] }
+            ]
         });
     }
 
-    async createIngredient(ingredientData){
-        return await this.model.create(ingredientData);
+    async findFavoritesByUserId(userId) {
+        return await this.model.findAll({
+            where: { userId },
+            include: [
+                { model: Recipe, as: 'recipe' }
+            ]
+        });
     }
 
-    async updateIngredient(id, ingredientData){
-        const [updateRowsCount] = await this.model.update(ingredientData, {
-            where: { id }
-        });
-
-        if(updateRowsCount === 0){
-            return null;
-        }
-
-        return await this.model.findByPk(id);
+    async createFavorite(data, transaction = null) {
+        const options = transaction ? { transaction } : {};
+        return await this.model.create(data, options);
     }
 
-    async deleteIngredient(id){
-        const deletedRowsCount = await this.model.destroy({
-            where: { id }
-        });
+    async removeFavorite(id, transaction = null) {
+        const options = transaction ? { where: { id }, transaction } : { where: { id } };
+        const deletedRowsCount = await this.model.destroy(options);
         return deletedRowsCount > 0;
     }
 }
 
-module.exports = new IngredientRepository();
-
+module.exports = new FavoriteRecipeRepository();

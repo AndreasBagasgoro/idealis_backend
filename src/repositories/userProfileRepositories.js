@@ -11,7 +11,7 @@ class UserProfileRepository extends BaseRepository {
             include: [{
                 model: User,
                 as: 'user',
-                attributes: { exclude: ['password'] }
+                attributes: { exclude: ['password_hash'] }
             }]
         });
     }
@@ -22,7 +22,7 @@ class UserProfileRepository extends BaseRepository {
             include: [{
                 model: User,
                 as: 'user',
-                attributes: { exclude: ['password'] }
+                attributes: { exclude: ['password_hash'] }
             }]
         });
     }
@@ -32,7 +32,7 @@ class UserProfileRepository extends BaseRepository {
             include: [{
                 model: User,
                 as: 'user',
-                attributes: { exclude: ['password'] }
+                attributes: { exclude: ['password_hash'] }
             }]
         });
     }
