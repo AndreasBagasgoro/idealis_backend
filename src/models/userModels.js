@@ -52,6 +52,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(255),
       allowNull: false,
     },
+    refresh_token: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+      comment: 'Token JWT untuk memperbarui access token sesi login',
+    },
   }, {
     sequelize,
     modelName: 'User',

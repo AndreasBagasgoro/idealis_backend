@@ -46,6 +46,17 @@ class UserRepository extends BaseRepository {
         });
     }
 
+    async findByRefreshToken(refreshToken) {
+        return await this.model.findOne({
+            where: { refresh_token: refreshToken }
+        });
+    }
+
+    async updateRefreshToken(id, refreshToken, transaction = null) {
+        const options = transaction ? { where: { id }, transaction } : { where: { id } };
+        return await this.model.update({ refresh_token: refreshToken }, options);
+    }
+
     async createUser(userData, transaction = null) {
         const options = transaction ? { transaction } : {};
         return await this.model.create(userData, options);
